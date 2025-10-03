@@ -44,3 +44,8 @@
 И для устранения этой критической пары нам как раз понадобится $Lex$ (M1 и M2 на графе - наши меры).
 
 ## Пополняемость по Кнуту-Бендиксу (не пополняется)
+- Из прошлого пункта добавляем правило $\texttt{cacb} \to \texttt{cacb}$
+- Следующая пара: $\texttt{abacb} \to \texttt{acbacbacbc}$ (строка $abcc$, здесь и далее не буду приводить диаграммы, т.к. они очень большие)
+- На пополнении $\texttt{bc} \to \texttt{cbacbacb}$ (строка $aabc$) возникает проблема с циклом
+($\texttt{сbc} \to \texttt{ccbacbacb} \to \texttt{acbbacbacb} \to \texttt{acccccacbacb} \to \texttt{acacbccacbacb}$, т.е. $\texttt{cbc} \to \omega_1\texttt{cbc}\omega_2$).
+#### A так как у нас изначально система завершимая, то $\texttt{bc} \to \texttt{cbacbacb}$ добавить нельзя и тогда система не пополняется
