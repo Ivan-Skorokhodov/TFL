@@ -35,8 +35,8 @@ static SRS_EXTENDED: &[RewriteRule] = &[
 
 static ALPHABET: &[char] = &['a', 'b', 'c'];
 
-const MAX_REPLACEMENTS: usize = 3;
-const WORD_LENGTH: usize = 6;
+const MAX_REPLACEMENTS: usize = 5;
+const WORD_LENGTH: usize = 9;
 
 fn generate_word() -> String {
     let mut rng = thread_rng();
