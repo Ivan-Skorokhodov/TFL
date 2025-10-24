@@ -8,17 +8,15 @@ struct RewriteRule {
 
 static SRS_EXTENDED: &[RewriteRule] = &[
     RewriteRule { pattern: "aa", replacement: "" },
-    RewriteRule { pattern: "bb", replacement: "cccc" },
-    RewriteRule { pattern: "cc", replacement: "acb" },
-    RewriteRule { pattern: "abc", replacement: "bbcc" },
-    RewriteRule { pattern: "baabaac", replacement: "cbba" },
-    RewriteRule { pattern: "cacb", replacement: "acbc" },
-    RewriteRule { pattern: "cbacbacb", replacement: "bc" },
-    RewriteRule { pattern: "acbcbacbc", replacement: "bacbacb" },
-    RewriteRule { pattern: "cbacbca", replacement: "cbacbc" },
-    RewriteRule { pattern: "cbcbacbc", replacement: "abacbacb" },
-    RewriteRule { pattern: "bacbc", replacement: "acbcb" },
-    RewriteRule { pattern: "acbcabacbacb", replacement: "cabacbacb" },
+    RewriteRule { pattern: "bc", replacement: "bb" },
+    RewriteRule { pattern: "abb", replacement: "bb" },
+    RewriteRule { pattern: "acb", replacement: "cc" },
+    RewriteRule { pattern: "acc", replacement: "cb" },
+    RewriteRule { pattern: "bba", replacement: "bb" },
+    RewriteRule { pattern: "cbb", replacement: "bbb" },
+    RewriteRule { pattern: "ccb", replacement: "bbb" },
+    RewriteRule { pattern: "ccc", replacement: "bbb" },
+    RewriteRule { pattern: "bbbb", replacement: "bb" },
 ];
 
 const ALPHABET: &[char] = &['a', 'b', 'c'];
@@ -112,13 +110,6 @@ fn check_invariants(chain: &[String]) -> bool {
         // 2. Если в начале были b или c, не должно быть слова только из 'a' или пустого
         if start_has_bc && (only_as(&chain[i]) || chain[i].is_empty()) {
             println!("Получено только 'a' на шаге {}: {}", i, chain[i]);
-            ok = false;
-        }
-
-        // 3. Если раньше была 'c', она не должна полностью исчезнуть
-        let prev_has_c = chain[i - 1].contains('c');
-        if prev_has_c && c == 0 {
-            println!("Исчезли все 'c' на шаге {}: {}", i, chain[i]);
             ok = false;
         }
     }
