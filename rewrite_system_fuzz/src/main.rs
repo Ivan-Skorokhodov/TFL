@@ -20,23 +20,22 @@ static SRS_PRIMARY: &[RewriteRule] = &[
 
 static SRS_EXTENDED: &[RewriteRule] = &[
     RewriteRule { pattern: "aa", replacement: "" },
-    RewriteRule { pattern: "bb", replacement: "cccc" },
-    RewriteRule { pattern: "cc", replacement: "acb" },
-    RewriteRule { pattern: "abc", replacement: "bbcc" },
-    RewriteRule { pattern: "baabaac", replacement: "cbba" },
-    RewriteRule { pattern: "cacb", replacement: "acbc" },
-    RewriteRule { pattern: "cbacbacb", replacement: "bc" },
-    RewriteRule { pattern: "acbcbacbc", replacement: "bacbacb" },
-    RewriteRule { pattern: "cbacbca", replacement: "cbacbc" },
-    RewriteRule { pattern: "cbcbacbc", replacement: "abacbacb" },
-    RewriteRule { pattern: "bacbc", replacement: "acbcb" },
-    RewriteRule { pattern: "acbcabacbacb", replacement: "cabacbacb" },
+    RewriteRule { pattern: "bc", replacement: "bb" },
+    RewriteRule { pattern: "abb", replacement: "bb" },
+    RewriteRule { pattern: "acb", replacement: "cc" },
+    RewriteRule { pattern: "acc", replacement: "cb" },
+    RewriteRule { pattern: "bba", replacement: "bb" },
+    RewriteRule { pattern: "cbb", replacement: "bbb" },
+    RewriteRule { pattern: "ccb", replacement: "bbb" },
+    RewriteRule { pattern: "ccc", replacement: "bbb" },
+    RewriteRule { pattern: "bbbb", replacement: "bb" },
 ];
 
 static ALPHABET: &[char] = &['a', 'b', 'c'];
 
 const MAX_REPLACEMENTS: usize = 5;
 const WORD_LENGTH: usize = 9;
+const ATTEMPTS: usize = 500;
 
 fn generate_word() -> String {
     let mut rng = thread_rng();
@@ -142,7 +141,7 @@ fn apply_rules(word: &str, rules: &[RewriteRule]) -> HashSet<String> {
 
 fn have_common_variation(start: &str, rules: &[RewriteRule], known_set: &HashSet<String>) -> bool {
     if known_set.contains(start) {
-        println!("Common word found: {}", start);
+        //println!("Common word found: {}", start);
         return true;
     }
 
@@ -155,7 +154,7 @@ fn have_common_variation(start: &str, rules: &[RewriteRule], known_set: &HashSet
         for current in queue {
             for new_word in apply_rules(&current, rules) {
                 if known_set.contains(&new_word) {
-                    println!("Common word found: {}", new_word);
+                    //println!("Common word found: {}", new_word);
                     return true;
                 }
                 if seen.insert(new_word.clone()) {
@@ -170,18 +169,18 @@ fn have_common_variation(start: &str, rules: &[RewriteRule], known_set: &HashSet
 }
 
 fn main() {
-    let initial = generate_word();
-    println!("Generated word: {}", initial);
+    for _ in 0..ATTEMPTS {
+        let initial = generate_word();
+        let rewritten = rewrite_randomly(initial.clone(), SRS_PRIMARY);
 
-    let rewritten = rewrite_randomly(initial.clone(), SRS_PRIMARY);
-    println!("After random rewrites: {}", rewritten);
+        let generated_set = generate_variations(&initial, SRS_EXTENDED, 20);
+        let found_common = have_common_variation(&rewritten, SRS_EXTENDED, &generated_set);
 
-    let generated_set = generate_variations(&initial, SRS_EXTENDED, 20);
-    let found_common = have_common_variation(&rewritten, SRS_EXTENDED, &generated_set);
-
-    if found_common {
-        println!("OK");
-    } else {
-        println!("Not OK");
+        if !found_common {
+            println!("Generated word: {}", initial);
+            println!("After random rewrites: {}", rewritten);
+            println!("Not OK");
+            break;
+        }
     }
 }
