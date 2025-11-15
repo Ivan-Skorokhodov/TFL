@@ -1,6 +1,6 @@
 use rand::Rng;
 use regex::Regex;
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 use std::process;
 
 struct DFA {
@@ -191,6 +191,98 @@ impl NFA {
         cur.iter().any(|s| self.accepting.contains(s))
     }
 }
+struct UniversalNFA {
+    trans: Vec<HashMap<char, Vec<usize>>>,
+    accepting: HashSet<usize>,
+    start_states: Vec<usize>,
+}
+
+impl UniversalNFA {
+    fn build() -> Self {
+        let max_state = 26usize;
+        let mut trans: Vec<HashMap<char, Vec<usize>>> = vec![HashMap::new(); max_state + 1];
+
+        let mut add = |from: usize, c: char, to: usize| {
+            trans[from].entry(c).or_insert_with(Vec::new).push(to);
+        };
+
+        add(16, 'a', 16);
+        add(16, 'b', 16);
+        add(16, 'b', 17);
+        add(17, 'b', 18);
+        add(18, 'a', 19);
+        add(19, 'a', 20);
+        add(20, 'a', 24);
+        add(24, 'b', 25);
+        add(25, 'b', 19);
+        add(19, 'b', 21);
+        add(21, 'a', 25);
+        add(20, 'b', 26);
+        add(26, 'a', 19);
+
+        add(12, 'b', 10);
+        add(9,  'b', 10);
+        add(9,  'a', 10);
+        add(11, 'a', 12);
+        add(15, 'b', 11);
+        add(10, 'a', 11);
+        add(1,  'b', 4);
+        add(2,  'a', 5);
+        add(0,  'b', 2);
+        add(13, 'a', 15);
+        add(8,  'b', 10);
+        add(8,  'a', 10);
+        add(8,  'b', 0);
+        add(14, 'b', 15);
+        add(4,  'b', 9);
+        add(6,  'b', 9);
+        add(4,  'a', 0);
+        add(2,  'b', 6);
+        add(3,  'b', 8);
+        add(11, 'b', 13);
+        add(12, 'a', 14);
+        add(1,  'a', 3);
+        add(0,  'a', 1);
+        add(5,  'b', 0);
+        add(5,  'b', 9);
+
+        let accepting: HashSet<usize> = [11usize, 19usize].into_iter().collect();
+
+        UniversalNFA {
+            trans,
+            accepting,
+            start_states: vec![16, 0], // E-переходы из "&"
+        }
+    }
+
+    fn run_branch(&self, start: usize, word: &str) -> bool {
+        let mut cur: HashSet<usize> = [start].into_iter().collect();
+
+        for ch in word.chars() {
+            let mut next = HashSet::new();
+            for &s in &cur {
+                if let Some(outs) = self.trans[s].get(&ch) {
+                    for &t in outs {
+                        next.insert(t);
+                    }
+                }
+            }
+            if next.is_empty() {
+                return false;
+            }
+            cur = next;
+        }
+
+        cur.iter().any(|s| self.accepting.contains(s))
+    }
+
+    /// слово принимается, только если каждая ветка его принимает.
+    fn run(&self, word: &str) -> bool {
+        self.start_states
+            .iter()
+            .all(|&s| self.run_branch(s, word))
+    }
+}
 
 fn rand_word_fixed_len<R: Rng>(rng: &mut R, len: usize) -> String {
     let mut bytes = vec![0u8; len];
@@ -201,6 +293,7 @@ fn rand_word_fixed_len<R: Rng>(rng: &mut R, len: usize) -> String {
     String::from_utf8(bytes).unwrap()
 }
 
+
 fn main() {
     let n = 500;
     let mut rng = rand::thread_rng();
@@ -210,6 +303,7 @@ fn main() {
 
     let dfa = DFA::build_min_dfa();
     let nfa = NFA::build_nfa();
+    let univ_nfa = UniversalNFA::build();
 
     for length in 1..30 {
         for i in 1..=n {
@@ -218,13 +312,15 @@ fn main() {
             let (_, dfa_ok) = dfa.run(&word);
             let nfa_ok = nfa.run(&word);
             let re_ok = re.is_match(&word);
+            let univ_ok = univ_nfa.run(&word);
 
-            if !(dfa_ok == nfa_ok && nfa_ok == re_ok) {
+            if !(dfa_ok == nfa_ok && nfa_ok == re_ok && re_ok == univ_ok) {
                 println!("Расхождение на длине {}, тест #{}", length, i);
                 println!("Слово: {:?}", word);
-                println!("DFA : {}", dfa_ok);
-                println!("NFA : {}", nfa_ok);
-                println!("RE  : {}", re_ok);
+                println!("DFA       : {}", dfa_ok);
+                println!("NFA       : {}", nfa_ok);
+                println!("Regex     : {}", re_ok);
+                println!("Universal : {}", univ_ok);
                 process::exit(1);
             }
         }
