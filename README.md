@@ -241,3 +241,62 @@ digraph NFA {
 | abbba  | 0       | 0       | 0      | 0      | 0       | 0   | 0     | 0  | 0 | 1 | 0  | 0 |
 | abbbab | 0       | 0       | 0      | 0      | 0       | 0   | 0     | 0  | 0 | 0 | 1  | 0 |
 | abbbaba| 0       | 0       | 0      | 0      | 0       | 0   | 0     | 0  | 0 | 0 | 0  | 1 |
+
+
+### ПКА (возможно малый)
+Вот его описание в DOT:
+```
+digraph AFA {
+  rankdir=LR;
+  node [shape = doublecircle]; 11; 19;
+  node [shape = circle];
+
+  start [shape = point];
+  start -> "&";
+  
+  "&"-> 16 [label = "E"];
+  16 -> 16 [label = "a"];
+  16 -> 16 [label = "b"];
+  16 -> 17 [label = "b"];
+  17 -> 18 [label = "b"];
+  18 -> 19 [label = "a"];
+  19 -> 20 [label = "a"];
+  20 -> 24 [label = "a"];
+  24 -> 25 [label = "b"];
+  25 -> 19 [label = "b"];
+  19 -> 21 [label = "b"];
+  21 -> 25 [label = "a"];
+  20 -> 26 [label = "b"];
+  26 -> 19 [label = "a"];
+  
+  "&" -> 0 [label = "E"];
+  12 -> 10 [label = "b"];
+  9 -> 10 [label = "b"];
+  9 -> 10 [label = "a"];
+  11 -> 12 [label = "a"];
+  15 -> 11 [label = "b"];
+  10 -> 11 [label = "a"];
+  1 -> 4 [label = "b"];
+  2 -> 5 [label = "a"];
+  0 -> 2 [label = "b"];
+  13 -> 15 [label = "a"];
+  8 -> 10 [label = "b"];
+  8 -> 10 [label = "a"];
+  8 -> 0 [label = "b"];
+  14 -> 15 [label = "b"];
+  4 -> 9 [label = "b"];
+  6 -> 9 [label = "b"];
+  4 -> 0 [label = "a"];
+  2 -> 6 [label = "b"];
+  3 -> 8 [label = "b"];
+  11 -> 13 [label = "b"];
+  12 -> 14 [label = "a"];
+  1 -> 3 [label = "a"];
+  0 -> 1 [label = "a"];
+  5 -> 0 [label = "b"];
+  5 -> 9 [label = "b"];
+}
+```
+
+Вот как он выглядит:
+![ПКА](AFA.svg)
