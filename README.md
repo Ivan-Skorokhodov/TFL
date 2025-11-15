@@ -1,12 +1,12 @@
 # Lab 2 (Скороходов Иван ИУ9-51Б)
 
 Исходная академическая регулярка:
-$(aba|bab|aabb)*(a|b)(a|b)bba(aba|bab|aabb)*$
+$(aba|bab|aabb)\*(a|b)(a|b)bba(aba|bab|aabb)\*$
 
 ### ДКА
 
 Описание в DOT:
-
+```
 digraph DFA {
 rankdir=LR;
 
@@ -113,7 +113,6 @@ rankdir=LR;
     43 -> 17 [label="b"];
     44 -> 8  [label="a"];
     44 -> 42 [label="b"];
-
 }
-
+```
 ![ДКА](DFA.png)
