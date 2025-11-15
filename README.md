@@ -115,4 +115,4 @@ rankdir=LR;
     44 -> 42 [label="b"];
 }
 ```
-![ДКА](DFA.png)
+![ДКА](DFA.svg)
