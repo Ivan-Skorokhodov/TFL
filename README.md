@@ -1,17 +1,15 @@
-# Lab 2 (Скороходов Иван ИУ9-51Б)
+# Lab 2 (Скороходов Иван ИУ9-51Б, вариант 24)
 
 Исходная академическая регулярка:
 $(aba|bab|aabb)\*(a|b)(a|b)bba(aba|bab|aabb)\*$
 
-### ДКА
+### ДКА (минимальный)
 
 Описание в DOT:
 
 ```
 digraph DFA {
 rankdir=LR;
-
-    // Вершины
     node [shape=circle];
 
     // Старт
@@ -22,10 +20,8 @@ rankdir=LR;
     node [shape=doublecircle];
     35 36 37 38 39 40 41 42 43 44;
 
-    // Остальные — обычные
     node [shape=circle];
 
-    // Переходы
     0  -> 0  [label="a,b"];
     1  -> 2  [label="a"];
     1  -> 3  [label="b"];
@@ -168,3 +164,64 @@ rankdir=LR;
 | 42 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 0 | 1 | 0 | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | 43 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 0 | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | 44 | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 0 | 0 | 1 | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+
+### НКА (возможно малый)
+Вот его описание в DOT:
+```
+digraph NFA {
+    rankdir=LR;
+
+    node [shape=circle];
+
+    // Старт
+    start [shape=point];
+    start -> 1;
+
+    // Принимающее состояние
+    node [shape=doublecircle];
+    8;
+
+    node [shape=circle];
+    
+    0 -> 0 [label="a,b"];
+    1 -> 2 [label="a"];
+    1 -> 9 [label="b"];
+    2 -> 3 [label="a"];
+    2 -> 6 [label="b"];
+    3 -> 0 [label="a"];
+    3 -> 4 [label="b"];
+    4 -> 0 [label="a"];
+    4 -> 5 [label="b"];
+    4 -> 1 [label="b"];
+    5 -> 8 [label="a"];
+    5 -> 0 [label="b"];
+    6 -> 1 [label="a"];
+    6 -> 7 [label="b"];
+    7 -> 0 [label="a"];
+    7 -> 5 [label="b"];
+    9  -> 10 [label="a"];
+    9  -> 11 [label="b"];
+    10 -> 0 [label="a"];
+    10 -> 7 [label="b"];
+    10 -> 1 [label="b"];
+    11 -> 0 [label="a"];
+    11 -> 7 [label="b"];
+    8  -> 12 [label="a"];
+    8  -> 16 [label="b"];
+    12 -> 13 [label="a"];
+    12 -> 15 [label="b"];
+    13 -> 0  [label="a"];
+    13 -> 14 [label="b"];
+    14 -> 0  [label="a"];
+    14 -> 8  [label="b"];
+    15 -> 8  [label="a"];
+    15 -> 0  [label="b"];
+    16 -> 17 [label="a"];
+    16 -> 0  [label="b"];
+    17 -> 0  [label="a"];
+    17 -> 8  [label="b"];
+}
+```
+
+Вот как он выглядит:
+![НКА](NFA.svg)
