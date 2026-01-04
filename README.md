@@ -53,3 +53,6 @@ digraph AFA {
 \end{aligned}
 \right\}, \quad \Sigma = \{a,b,c\}.
 ```
+
+Пересечем его с $c^+bc^+aa(a|b|c)^*$ и рассмотрим
+![Шаблон](rk2_2.jpg)
