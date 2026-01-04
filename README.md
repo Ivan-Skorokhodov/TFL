@@ -43,7 +43,7 @@ digraph AFA {
 }
 ```
 
-### Здача 1
+### Здача 2
 
 Язык
 ```math
@@ -66,3 +66,8 @@ digraph AFA {
 - В слове $xz_2$ применим нулевю накачку. Тогдау нас не будет $aa$ в слове, противоречие.
 
 Следовательно это не DCFL.
+
+### Здача 3
+
+<img width="549" height="166" alt="image" src="https://github.com/user-attachments/assets/988ab701-a111-4c58-9c9b-7644f8eba8dc" />
+
